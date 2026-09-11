@@ -36,16 +36,29 @@ Baca bagian paper dalam urutan ini:
 
 | Kolom | Tempat di paper | Petunjuk |
 |-------|-----------------|----------|
-| **Authors/Title** | Halaman judul, header LaTeX `\title`, `\author` | Format ringkas: `Penulis1, Penulis2, & Penulis3 (Tahun)`. > 6 penulis → `Penulis1 et al.` |
+| **Title & Authors / Journal / Year** | Halaman judul, header LaTeX `\title`, `\author`, metadata | Format ringkas: `Penulis1, Penulis2, & Penulis3`. > 6 penulis → `Penulis1 et al.` |
 | **Purpose** | Abstract & Introduction | Cari frasa: "this study aims", "we examine", "penelitian ini bertujuan". 1 kalimat; tidak eksplisit → ringkas + tandai `(diringkas)` |
-| **Gaps** | Introduction (gap yang di-address) ATAU Discussion/Limitations (sesuai kesepakatan Step 0) | Gap yang di-address: frasa "little is known", "few studies", "no study has", "research gap". Limitations: frasa "limitation", "cannot", "future work should" |
 | **Method (Variables/Samples)** | Method section | Desain; IV/DV; `n=...`; populasi & sampling; instrumen; analisis (regresi, SEM/PLS, ANOVA, dll.) |
+| **Key Findings** | Abstract & Results | Hasil utama + angka kunci (efek, koefisien, p-value, n) |
+| **Limitations** | Discussion / Limitations (akhir paper) | Frasa "limitation", "cannot", "our study was limited". Tidak ada → `—` |
+| **Gaps** | Introduction (gap yang di-address) ATAU pembahasan (sesuai kesepakatan Step 0) | Gap yang di-address: "little is known", "few studies", "no study has". Untuk makna gap riset baru: rekomendasi implisit penulis | 
 | **Theory Used** | Introduction / Literature Review | Nama teori/kerangka (mis. Theory of Planned Behavior). Tidak eksplisit → `Tidak disebut eksplisit` |
 | **Novelty/Contribution** | Introduction & Conclusion | Ambil klaim paper: "we contribute", "first to", "novel". JANGAN opini sendiri |
 | **Future Studies** | Future Work / Conclusion | Salin/ringkas saran lanjutan. Tidak ada → `—` |
-| **Source (DOI & Publisher)** | Halaman judul/header/footer, metadata logger | `DOI: 10.xxxx/... \| Jurnal \| Tahun` |
+| **DOI & Publisher** | Halaman judul/header/footer, metadata logger | `DOI: 10.xxxx/... \| Penerbit` |
 
 Untuk `.tex`, ekstraksi lebih mudah: `\title{}`, `\author{}`, `\begin{abstract}...`, section `\section{Method}`.
+
+## 3b. Metadata Biblio untuk Export Sitasi
+
+Export `.bib`/`.ris`/`.xml` butuh metadata lengkap. Kalau tersedia di metadata API (OpenAlex
+`biblio`/`primary_location`, Semantic Scholar `externalIds`/`venue`) atau di file, kumpulkan:
+`title`, `authors` (**list**, format `Surname, Given`, > 6 penulis tetap simpan semua — cuti di tabel saja,
+tidak di file sitasi), `year`, `journal`, `volume`, `issue`, `pages`, `doi`, `publisher`, `url`,
+`abstract`, `keywords`.
+
+Field yang tidak tersedia → **string kosong `""`** (bukan `—`) di JSON, agar tidak ikut ter-export.
+`openalex` juga menyediakan keywords/topics bila perlu.
 
 ## 4. Fallback Data
 

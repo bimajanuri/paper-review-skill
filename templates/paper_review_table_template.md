@@ -1,30 +1,44 @@
-# Template Tabel Review Paper (Paper Review Table)
+# Template Tabel Review Paper (SciSpace-Style)
 
-Salin struktur ini untuk output tabel. Default **8 kolom** + ruang untuk kolom custom.
-Isi `—` bila data tidak tersedia di paper/sumber.
+Salin struktur ini untuk output tabel. **Blok sitasi + blok ekstraksi** (ala SciSpace Literature Review)
++ ruang kolom custom. Isi `—` bila data tidak tersedia di paper/sumber.
 
 ## Metadata Pencarian
 
 - **Mode**: [Search / Folder / Hybrid]
 - **Topik**: [topik penelitian]
-- **Kata kunci**: [keyword + kombinasi yang dipakai]
+- **Query/kata kunci**: [keyword + kombinasi yang dipakai]
 - **Jumlah target**: [N] | **Jumlah baris**: [M]
 - **Rentang tahun**: [YYYY–YYYY] | **Tanggal**: [YYYY-MM-DD]
 - **Sumber**: [OpenAlex / Semantic Scholar / arXiv / Folder: <path> / kombinasi]
 
 ## Tabel Review
 
-| No | Authors/Title | Purpose | Gaps | Method (Variables/Samples) | Theory Used | Novelty/Contribution | Future Studies | Source (DOI & Publisher) |
-|----|---------------|---------|------|---------------------------|-------------|----------------------|----------------|--------------------------|
-| 1  | [Penulis (Tahun)] — "[Judul]" | [Tujuan 1 kalimat] | [gap yang di-address / limitations] | Desain; IV; DV; n=; sampel; instrumen; analisis | [Teori / Tidak disebut eksplisit] | [klaim kontribusi] | [saran lanjutan / —] | DOI: 10.xxxx/... \| [Jurnal/Penerbit] \| [Tahun] |
-| 2  | | | | | | | | |
-| ... | | | | | | | | |
+| No | Title & Authors | Journal | Year | Purpose | Method (Variables/Samples) | Key Findings | Limitations | Gaps (yang di-address) | Theory Used | Novelty/Contribution | Future Studies | DOI & Publisher |
+|----|-----------------|---------|------|---------|---------------------------|--------------|-------------|------------------------|-------------|----------------------|----------------|-----------------|
+| 1  | [Penulis (Tahun)] — "[Judul]" | [Jurnal] | [Tahun] | [Tujuan 1 kalimat] | Desain; IV; DV; n=; sampel; instrumen; analisis | [hasil + angka kunci] | [keterbatasan / —] | [gap yang di-address] | [Teori / Tidak disebut eksplisit] | [klaim kontribusi] | [saran lanjutan / —] | DOI: 10.xxxx/... \| [Penerbit] |
+| 2  | | | | | | | | | | | | |
+| ... | | | | | | | | | | | | |
 
 ### Kolom custom (opsional — tambahkan setelah kolom default)
 
 | ... | [Kolom custom 1] | [Kolom custom 2] |
 |-----|------------------|------------------|
 | ... | [isi] | [isi] |
+
+## Master Data (untuk Export)
+
+Simpan `papers.json` sesuai skema `references/table-builder.md` — mencakup metadata biblio
+(authors list, journal, year, volume/issue/pages, doi, publisher, url, abstract, keywords) +
+nilai tiap kolom. Semua format export diturunkan dari file ini.
+
+## Ekspor Format
+
+```bash
+python3 scripts/export_formats.py papers.json --formats csv,xlsx,bib,xml,ris --out .
+```
+
+Menghasilkan `literature_table.csv`, `.xlsx`, `.bib`, `.xml`, `.ris`.
 
 ## Triase Pencarian
 

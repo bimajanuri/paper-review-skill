@@ -1,83 +1,133 @@
-# Table Builder — Render Tabel Review
+# Table Builder — Render & Export Tabel Review
 
-Panduan merakit output tabel (Markdown/CSV) dari hasil ekstraksi, termasuk kolom custom.
+Panduan merakit output tabel (Markdown) **dan export 5 format** (CSV / XLSX / BIB / XML / RIS) dari
+hasil ekstraksi — ala **SciSpace Literature Review / Data Extraction** (synthesis matrix).
 
-## 1. Definisikan Kolom Dulu
+## 1. Konsep: Satu Data → Banyak Format
 
-Di Step 0 user menyepakati kolom. Contoh resolusi kolom:
+Seluruh format diturunkan dari **satu file master** `papers.json`. Agent membangun JSON ini di
+Step 2/3, lalu `scripts/export_formats.py` menurunkan semua format dari sana.
 
-| Mode | Header |
-|------|--------|
-| **Default (8 kolom)** | `No | Authors/Title | Purpose | Gaps | Method (Variables/Samples) | Theory Used | Novelty/Contribution | Future Studies | Source (DOI & Publisher)` |
-| **Default + Relevance** | header di atas + `Relevance (0–10)` |
-| **Kolom custom lain** | di-append atau mengikuti urutan yang user mau (mis. `Findings`, `Quartile`, `Screenshot`, `Referensi Lain`) |
+```text
+papers.json ──► literature_table.md   (tabel markdown)
+            ──► literature_table.csv  (Excel/Google Sheets)
+            ──► literature_table.xlsx (Excel terformat: sheet Papers + Metadata)
+            ──► literature_table.bib  (BibTeX, import ke Zotero/JabRef/Overleaf)
+            ──► literature_table.xml  (EndNote XML, import ke EndNote/Zotero)
+            ──► literature_table.ris  (RIS JOUR, import ke Zotero/Mendeley/EndNote)
+```
 
-**Kolom custom** diisi dengan:
-- isi paper (mis. `Findings` = angka/hasil utama dari Results), atau
-- hasil pertanyaan tambahan yang diminta user (mis. "tandai mana yang teoritis vs empiris").
+## 2. Skema `papers.json`
 
-Hapus kolom default hanya bila user eksplisit memintanya. Jaga header singkat & konsisten untuk semua baris.
+```json
+{
+  "meta": {
+    "mode": "Search", "topic": "...", "query": "...", "date": "2026-09-11",
+    "target": 15, "sources": "OpenAlex", "note": "..."
+  },
+  "papers": [
+    {
+      "title": "...",
+      "authors": ["Surname, Given", "Surname2, Given2"],
+      "year": "2026",
+      "journal": "...", "volume": "", "issue": "", "pages": "",
+      "doi": "10.xxxx/...", "publisher": "...", "url": "",
+      "abstract": "...", "keywords": ["k1", "k2"],
+      "purpose": "...", "method": "...", "key_findings": "...",
+      "limitations": "...", "gaps": "...", "theory": "...",
+      "novelty": "...", "future_work": "...",
+      "custom": { "<Label Kolom Custom>": "..." }
+    }
+  ]
+}
+```
 
-## 2. Isi Sel
+Aturan:
+- Field **biblio** (title/authors/year/journal/volume/issue/pages/doi/publisher/url/abstract/keywords)
+  diisi dari metadata API/file. Tidak tersedia → **string kosong** (agar tidak ikut export sitasi).
+- Field **ekstraksi** (purpose/method/key_findings/limitations/gaps/theory/novelty/future_work + custom)
+  tidak tersedia → `—` di tabel, tidak mengarang.
+- `authors` berupa **list** `["Surname, Given", ...]` — wajib untuk BibTeX/RIS/XML yang benar.
 
-- Satu **baris per paper**. Nilai sel ringkas (target ≤ ~40 kata; panjangkan hanya bila perlu, mis. Method).
-- Data tidak tersedia → `—` (jangan biarkan sel kosong tanpa makna).
-- Inferensi → tambahkan `(diringkas)`; tidak eksplisit → `(tidak eksplisit)`.
-- DOI yang belum terverifikasi → `UNVERIFIED`.
-- Untuk sel berisi list, gunakan titik koma (`;`) sebagai pemisah, bukan baris baru (menjaga CSS:
-  agar tidak merusak format tabel di markdown).
+## 3. Kolom Default (ala SciSpace)
 
-## 3. Render Markdown
+Urutan kolom yang dirender ke tabel/CSV/XLSX (label → key):
+
+| Label di tabel | Key di JSON |
+|----------------|-------------|
+| No | (indeks baris) |
+| Title & Authors | `authors_title` (komposisi: penulis — "judul") |
+| Journal | `journal` |
+| Year | `year` |
+| Purpose | `purpose` |
+| Method (Variables/Samples) | `method` |
+| Key Findings | `key_findings` |
+| Limitations | `limitations` |
+| Gaps (yang di-address) | `gaps` |
+| Theory Used | `theory` |
+| Novelty/Contribution | `novelty` |
+| Future Studies | `future_work` |
+| DOI & Publisher | `source` (komposisi: DOI: ... \| Penerbit) |
+
+Kolom custom ditambahkan dari object `custom` tiap paper; urutannya mengikuti urutan pertama muncul.
+Agent dapat menambah kolom (mis. `Citations`, `Sampling Method`) dengan memasukkan label sama di semua
+paper. `DEFAULT_COLS` di `export_formats.py` dapat dioverride — cukup tambahkan array `columns` di JSON
+(jika dipakai, tiap elemen `{"label":"...","key":"key_di_paper"}` atau string = label dengan key sama).
+
+## 4. Render Markdown
 
 ```markdown
-| No | Authors/Title | Purpose | Gaps | ... |
-|----|---------------|---------|------|-----|
-| 1  | ... | ... | ... | ... |
+| No | Title & Authors | Journal | Year | Purpose | ... |
+|----|-----------------|---------|-------|---------|-----|
+| 1  | Smith, John et al. — "..." | Jurnal | 2026 | ... | ... |
 ```
 
-Di atas tabel, sertakan **Metadata Pencarian**:
+- Gunakan titik koma (`;`) sebagai pemisah dalam sel, bukan baris baru.
+- Di atas tabel: **Metadata Pencarian** (mode, topik, query, jumlah target/jumlah baris, tanggal, sumber).
+- Di bawah tabel: **Legenda** (`—`, `(diringkas)`, `(tidak eksplisit)`, `UNVERIFIED`).
 
-```markdown
-- Mode: Search / Folder / Hybrid
-- Topik: ...
-- Kata kunci: ... (tambahkan kombinasi yang dipakai)
-- Jumlah target: N | Jumlah baris: M
-- Rentang tahun: YYYY–YYYY | Tanggal: YYYY-MM-DD
-- Sumber: OpenAlex / Semantic Scholar / Folder: <path> / kombinasi
+## 5. Export 5 Format
+
+```bash
+python3 scripts/export_formats.py papers.json \
+    --formats csv,xlsx,bib,xml,ris \
+    --out . \
+    --prefix literature_table
 ```
 
-Di bawah tabel, sertakan **Legenda**:
+| opsi | default | keterangan |
+|------|---------|------------|
+| `--formats` | `csv,xlsx,bib,xml,ris` | subset format yang diinginkan, pisahkan koma |
+| `--out` | `.` | folder output |
+| `--prefix` | `literature_table` | nama dasar file output |
 
-```markdown
-## Legenda
-- `—` : data tidak tersedia
-- `(diringkas)` : disimpulkan dari inferensi
-- `(tidak eksplisit)` : tidak dinyatakan di paper
-- `UNVERIFIED` : keberadaan/DOI belum diverifikasi — cek manual
+Detail tiap format:
+- **`.csv`** — header = kolom tabel; UTF-8 dengan BOM (agar karakter non-ASCII terbaca benar di Excel).
+- **`.xlsx`** — butuh `openpyxl` (`pip3 install openpyxl` bila belum ada). Sheet `Papers`: header
+  terformat (bold + fill biru), wrap text, freeze top row, autofilter, lebar kolom otomatis.
+  Sheet `Metadata`: isi `meta`.
+- **`.bib`** — `@article{key, ...}` dengan `author` joined ` and `, `doi`, `journal`, `year`,
+  `volume/number/pages`, `publisher`, `abstract`, `keywords`; kolom ekstraksi digabung ke field `note`.
+- **`.xml`** — **EndNote XML**: `<xml><records><record>` dengan `<ref-type name="Journal Article">17</ref-type>`,
+  contributors/authors, titles/title, periodicals/full-title, dates/year, volume/number/pages,
+  publisher, abstract, keywords, `<electronic-resource-num>` untuk DOI, `<url>`, `<notes>`.
+- **`.ris`** — `TY  - JOUR`, `AU` per penulis, `TI`, `JO/JF`, `PY`, `VL`, `IS`, `SP/EP`, `DO`, `PB`,
+  `AB`, `KW`, `UR`, `N1` (notes kolom ekstraksi), diakhiri `ER  - `.
+
+## 6. Validasi Sebelum Menyerahkan
+
+1. `papers.json` ter-parse (`python3 -c "import json;json.load(open('papers.json'))"`).
+2. Jumlah baris tabel == jumlah paper lolos (sesuai triase Step 4).
+3. Tidak ada sel kosong misterius — selalu `—` saat data tidak tersedia.
+4. DOI konsisten (`DOI: 10.xxxx/...`).
+5. Spot-check file export: .bib terbaca, .ris punya `TY`/`ER`, .xml valid XML, .xlsx terbuka
+   (verifikasi cepat dengan openpyxl/parser bila tersedia).
+6. Jika akan diimpor ke reference manager, sarankan user menguji satu file (Zotero/Mendeley).
+
+## 7. Output
+
 ```
-
-## 4. Render CSV (Opsional)
-
-- Header = nama kolom, satu baris per paper.
-- Pisahkan koma; nilai yang mengandung koma/kutip/baris-baru dibungkus `"..."` (gandakan `"` di dalamnya).
-- Semi-colon atau tab dapat dipakai bila user menggunakan Excel lokal berbahasa Indonesia (`;` diterima) —
-  tanya atau beri tahu format yang dipakai.
-
-## 5. Validasi Tabel
-
-Sebelum menyerahkan:
-1. Jumlah baris == jumlah paper lolos (sesuai triase).
-2. Semua header kolom yang disepakati hadir; tidak ada kolom tanpa isi untuk semua baris (kecuali memang `—`).
-3. Tidak ada sel kosong (spasi kosong) — selalu isi `—`.
-4. DOI menjorok konsisten (`DOI: 10.xxxx/...`) untuk kolom Source.
-5. Jika tabel MD akan dikonversi (Excel/Google Sheets), sarankan CSV.
-
-## 6. Output
-
-```
+papers.json           — master data (wajib disimpan)
 literature_table.md   — tabel final markdown
-literature_table.csv  — opsional, bila diminta
+literature_table.csv / .xlsx / .bib / .xml / .ris — export sesuai permintaan
 ```
-
-Tabel ini siap dipakai untuk Gap Analysis lanjutan (lihat academic-writing-skill Tahap 1.4) atau
-sintesis literatur.

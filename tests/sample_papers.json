@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "mode": "Search",
+    "topic": "Social media and academic performance",
+    "query": "\"social media\" AND \"academic performance\"",
+    "date": "2026-09-11",
+    "target": 2,
+    "sources": "OpenAlex"
+  },
+  "papers": [
+    {
+      "title": "Social media use and academic performance: A systematic review",
+      "authors": ["Smith, John", "Doe, Jane", "Roe, Rick", "Adams, Ada", "Lee, Lin", "Moore, Mia", "Neo, Nina", "Oli, Oni"],
+      "year": "2025",
+      "journal": "Educational Research Review",
+      "volume": "41",
+      "issue": "2",
+      "pages": "100-115",
+      "doi": "10.1016/j.edurev.2025.100115",
+      "publisher": "Elsevier",
+      "url": "https://doi.org/10.1016/j.edurev.2025.100115",
+      "abstract": "This systematic review synthesizes 120 studies on social media usage and student achievement.",
+      "keywords": ["social media", "academic performance", "systematic review"],
+      "purpose": "Meninjau sistematis pengaruh penggunaan media sosial terhadap prestasi akademik mahasiswa.",
+      "method": "Systematic review; PRISMA; 120 studi; n=45.000+ siswa",
+      "key_findings": "Korelasi negatif lemah (r=-0.11) antara durasi medsos dan IPK.",
+      "limitations": "Kualitas studi primer heterogen; bias publikasi.",
+      "gaps": "Belum ada studi tentang multitasking media pada mahasiswa Asia Tenggara.",
+      "theory": "Uses and Gratifications Theory",
+      "novelty": "Sintesis meta-analitik pertama yang memisahkan jenis platform.",
+      "future_work": "Studi longitudinal dan eksperimen terkontrol.",
+      "custom": {"Relevance (0-10)": "9"}
+    },
+    {
+      "title": "Media multitasking in higher education",
+      "authors": ["Garcia, Maria", "Tan, Wei"],
+      "year": "2024",
+      "journal": "Computers & Education",
+      "volume": "202",
+      "pages": "104900",
+      "doi": "10.1016/j.compedu.2024.104900",
+      "publisher": "Elsevier",
+      "url": "https://doi.org/10.1016/j.compedu.2024.104900",
+      "abstract": "We examine the effect of in-class media multitasking on learning outcomes.",
+      "keywords": ["multitasking", "learning outcomes", "attention"],
+      "purpose": "Menguji efek media multitasking di kelas terhadap hasil belajar.",
+      "method": "Eksperimen; IV: multitasking (ya/tidak); DV: skor tes; n=312 mahasiswa",
+      "key_findings": "Multitasking menurunkan skor tes 13% (p<0.001).",
+      "limitations": "Setting lab, bukan kelas nyata.",
+      "gaps": "Kurang studi tentang intervensi kebijakan kampus.",
+      "theory": "Cognitive Load Theory",
+      "novelty": "Bukti kausal pertama dengan desain eksperimen acak di konteks Asia.",
+      "future_work": "Replikasi lintas budaya; ukur engagement kognitif.",
+      "custom": {}
+    }
+  ]
+}
