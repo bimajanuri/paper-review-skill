@@ -5,7 +5,7 @@ export_formats.py — Export paper-review table to multiple formats.
 Reads a papers.json file produced by the paper-review skill and writes:
   CSV, XLSX (Excel), BIB (BibTeX), XML (EndNote XML), RIS
 
-SciSpace-style one-command export: `python3 export_formats.py papers.json`
+One-command export: `python3 export_formats.py papers.json`
 
 Usage:
   python3 export_formats.py papers.json \
@@ -47,7 +47,7 @@ import unicodedata
 
 EM_DASH = "\u2014"
 
-# Default SciSpace-style column order (label -> field key).
+# Default column order (label -> field key).
 # "authors_title", "source" are composed; "no" is the row index.
 DEFAULT_COLS = [
     ("No", "no"),

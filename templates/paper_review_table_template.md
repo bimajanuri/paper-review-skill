@@ -1,9 +1,9 @@
-# Template Tabel Review Paper (SciSpace-Style)
+# Template Tabel Review Paper (Literature Review Matrix)
 
 > ⚠️ **Output UTAMA** adalah tabel penuh di bawah ini — **setiap paper = satu baris**, semua kolom
 > review terisi. Bagian Metadata/Triase/Legenda adalah pelengkap, bukan pengganti tabel.
 
-Salin struktur ini untuk output tabel. **Blok sitasi + blok ekstraksi** (ala SciSpace Literature Review)
+Salin struktur ini untuk output tabel. **Blok sitasi + blok ekstraksi** (literature review matrix)
 + ruang kolom custom. Isi `—` bila data tidak tersedia di paper/sumber.
 
 > **Isi sel:** komprehensif — masing-masing kolom ekstraksi berisi **2–5 kalimat lengkap** dengan
@@ -27,7 +27,7 @@ Salin struktur ini untuk output tabel. **Blok sitasi + blok ekstraksi** (ala Sci
 | 1  | [Penulis (Tahun)] — "[Judul]" | [Jurnal] | [Tahun] | [Tujuan 1–2 kalimat] [I-1] | **[METHOD]** Desain [M-2]. Sampling [M-5]. Analisis [M-7]. Pengecualian [M-8]. | [Hasil utama + angka kunci] [R-1][R-2] | [Keterbatasan 1] [D-1]. [Keterbatasan 2] [D-2]. | [Gap yang di-address] [I-2] | [Teori] [I-3] | [Klaim kontribusi] [C-1] | **[FUTURE]** Saran 1 [F-1]. Saran 2 [F-2]. | DOI: 10.xxxx/... \| [Penerbit] |
 | 2  | | | | | | | | | | | | |
 
-**Contoh real — sel Method (komprehensif, sesuai SciSpace):**
+**Contoh real — sel Method (komprehensif, dengan penanda sumber):**
 Penelitian menggunakan analisis komparatif statistik untuk membandingkan efektivitas metode Kanban dan Scrum dalam pengembangan perangkat lunak Agile, dengan fokus pada proyek yang memiliki biaya tetap dan jadwal tetap [M-2]. Metode pengumpulan data melibatkan penggunaan sampel yang nyaman dari para ahli di bidang manajemen proyek Agile, dengan pengalaman minimal satu tahun dalam pengembangan perangkat lunak Agile [M-5][M-6]. Analisis data dilakukan melalui Confirmatory Component Analysis (CCA) dan pengujian hipotesis untuk mengidentifikasi korelasi intra-variabel, serta penilaian keandalan data menggunakan Composite Reliability (CR) dan koefisien Cronbach [M-7]. Penelitian ini mengecualikan beberapa batasan proyek manajemen seperti jadwal dan biaya, dan lebih fokus pada batasan sumber daya, ruang lingkup proyek, dan risiko [M-8].
 
 **Contoh real — sel Future Studies:**

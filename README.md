@@ -1,8 +1,8 @@
 # Paper Review Skill
 
 **Skill review & sintesis literatur untuk AI coding agents** (Claude Code, OpenCode, dan agen berbasis
-Agent Skills lainnya). Memproduksi **tabel review paper** (synthesis matrix, gaya **SciSpace Literature
-Review**) dari dua sumber: (1) **pencarian online** berdasarkan topik + kata kunci + jumlah target, dan
+Agent Skills lainnya). Memproduksi **tabel review paper** (synthesis matrix / literature review matrix)
+dari dua sumber: (1) **pencarian online** berdasarkan topik + kata kunci + jumlah target, dan
 (2) **folder lokal** berisi paper berformat PDF/LaTeX. Konten **bilingual** (Bahasa Indonesia / English).
 
 Skill ini adalah subset terfokus dari [`bimajanuri/academic-writing-skill`](https://github.com/bimajanuri/academic-writing-skill)
@@ -11,11 +11,11 @@ Skill ini adalah subset terfokus dari [`bimajanuri/academic-writing-skill`](http
 ## Fitur Utama
 
 - **Tiga mode input**: Search (pencarian online), Folder (baca PDF/LaTeX lokal), Hybrid (gabungan + dedup)
-- **Tabel ala SciSpace Literature Review**: blok sitasi (Title & Authors, Journal, Year, DOI & Publisher)
+- **Tabel literature review (synthesis matrix)**: blok sitasi (Title & Authors, Journal, Year, DOI & Publisher)
   + blok ekstraksi (Purpose, Method, Key Findings, Limitations, Gaps, Theory Used, Novelty, Future Studies)
 - **Sel komprehensif + provenance**: tiap kolom ekstraksi berisi 2–5 kalimat detail (bukan frasa pendek),
   dan setiap kalimat diberi **penanda sumber** `[KODE-n]` (bagian paper + nomor paragraf, mis. `[M-2]`) —
-  sehingga tiap klaim dapat ditelusuri ke bagian paper, seperti nomor kutipan kecil di SciSpace
+  sehingga tiap klaim dapat ditelusuri ke bagian paper (kode bagian + nomor paragraf)
 - **Kolom custom**: user dapat menambah kolom apa saja (Relevance, Citations, Sampling Method, dll.)
 - **Export 5 format** dari satu master data `papers.json`:
   CSV, Excel (XLSX), BibTeX (BIB), EndNote XML, RIS
@@ -75,7 +75,7 @@ paper-review/
 │   ├── extracting-papers.md          # Baca folder PDF/LaTeX + ekstraksi per-field
 │   └── table-builder.md              # Skema papers.json, render tabel, export 5 format
 ├── templates/
-│   └── paper_review_table_template.md  # Template tabel review (SciSpace-style)
+│   └── paper_review_table_template.md  # Template tabel review (synthesis matrix)
 ├── scripts/
 │   ├── extract_text.sh               # Ekstraksi teks PDF via pdftotext
 │   └── export_formats.py             # Export CSV/XLSX/BIB/XML/RIS dari papers.json
@@ -105,7 +105,8 @@ paper-review/
 Subset dari **bimajanuri/academic-writing-skill**, yang mengadaptasi metodologi dari
 Master-cai/Research-Paper-Writing-Skills, SNL-UCSB/paper-writing-skill, dan WenyuChiou/ai-research-skills
 (literature triage matrix). Struktur tabel (synthesis matrix) dan daftar format ekspor
-(CSV/XLSX/BIB/XML/RIS) meniru **SciSpace Literature Review / Data Extraction**.
+(CSV/XLSX/BIB/XML/RIS) meniru fitur **Literature Review / Data Extraction** pada platform
+reference-manager AI.
 
 ## Lisensi
 

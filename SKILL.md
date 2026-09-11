@@ -1,13 +1,13 @@
 ---
 name: paper-review
 description: |
-  Menghasilkan tabel review literatur akademik ala SciSpace Literature Review (sintesis matrix) dari (a) pencarian online berdasarkan topik + kata kunci + jumlah target, atau (b) folder lokal berisi paper berformat PDF/LaTeX, atau (c) kombinasi keduanya. Output: tabel markdown + export CSV, Excel (XLSX), BibTeX (BIB), XML (EndNote), dan RIS. Kolom default: Title & Authors, Journal, Year, Purpose, Method (Variables/Samples), Key Findings, Limitations, Gaps, Theory Used, Novelty/Contribution, Future Studies, DOI & Publisher — plus kolom custom apa pun. Generates a SciSpace-style literature review synthesis matrix from online search or a local PDF/LaTeX folder, exportable to CSV/XLSX/BIB/XML/RIS. Trigger: "literature review", "tabel review paper", "tabel literatur", "review paper di folder ini", "cari paper tentang X sebanyak N", "literature matrix", "synthesize papers", "review jurnal", "export ris", "bibtex", "subset of academic-writing-skill".
+  Menghasilkan tabel review literatur akademik (synthesis matrix / literature review matrix) dari (a) pencarian online berdasarkan topik + kata kunci + jumlah target, atau (b) folder lokal berisi paper berformat PDF/LaTeX, atau (c) kombinasi keduanya. Output: tabel markdown + export CSV, Excel (XLSX), BibTeX (BIB), XML (EndNote), dan RIS. Kolom default: Title & Authors, Journal, Year, Purpose, Method (Variables/Samples), Key Findings, Limitations, Gaps, Theory Used, Novelty/Contribution, Future Studies, DOI & Publisher — plus kolom custom apa pun. Generates a structured literature review synthesis matrix from online search or a local PDF/LaTeX folder, exportable to CSV/XLSX/BIB/XML/RIS. Trigger: "literature review", "tabel review paper", "tabel literatur", "review paper di folder ini", "cari paper tentang X sebanyak N", "literature matrix", "synthesize papers", "review jurnal", "export ris", "bibtex", "subset of academic-writing-skill".
 ---
 
 # Paper Review — Review & Sintesis Literatur
 
-Skill ini membuat **tabel review** terstruktur dari paper akademik — mengikuti format **SciSpace
-Literature Review/Data Extraction**: tabel silang (synthesis matrix) dengan blok sitasi + blok ekstraksi,
+Skill ini membuat **tabel review** terstruktur dari paper akademik — format **Literature Review /
+Data Extraction** (synthesis matrix): tabel silang dengan blok sitasi + blok ekstraksi,
 dan **ekspor 5 format** (CSV, Excel XLSX, BibTeX, XML, RIS). Merupakan subset terfokus dari
 [bimajanuri/academic-writing-skill](https://github.com/bimajanuri/academic-writing-skill): hanya bagian
 pengumpulan literatur + ekstraksi metadata + penyusunan tabel (setara Tahap 1 "Explorasi"), tanpa
@@ -46,7 +46,7 @@ Tanyakan parameter berikut (minimalkan bila konteks sudah jelas):
 | Mode input | Search / Folder / Hybrid | sesuai permintaan |
 | Topik / kata kunci | wajib (untuk Search/Hybrid) | — |
 | Jumlah paper target | angka | 10–15 (search), seluruh file (folder) |
-| Kolom table | default 12 kolom (SciSpace-style) + kolom custom | default |
+| Kolom table | default 12 kolom (literature review matrix) + kolom custom | default |
 | Makna kolom "Gaps" | `gap yang di-address paper` vs `gap/kelangkaan yang bisa jadi riset baru` | gap yang di-address paper (Limitations sudah punya kolom sendiri) |
 | Rentang tahun | bebas | 5 tahun terakhir (search) |
 | Filter kualitas jurnal | Scopus Quartile / peer-reviewed saja / tanpa filter | tanpa filter tapi tetap tag sumber |
@@ -55,7 +55,7 @@ Tanyakan parameter berikut (minimalkan bila konteks sudah jelas):
 | Format ekspor | CSV / Excel (XLSX) / BibTeX (BIB) / XML (EndNote) / RIS / semua | Bergantung permintaan (default: MD saja; "export semua" → 5 format) |
 | Folder target | wajib (untuk Folder/Hybrid) | — |
 
-**Kolom default ala SciSpace** (blok sitasi dulu, lalu blok ekstraksi; user boleh menghapus/menambah):
+**Kolom default (literature review matrix** — blok sitasi dulu, lalu blok ekstraksi; user boleh menghapus/menambah):
 
 | # | Kolom | Definisi |
 |---|-------|----------|
@@ -72,7 +72,7 @@ Tanyakan parameter berikut (minimalkan bila konteks sudah jelas):
 | 11 | Future Studies | Saran penelitian lanjutan |
 | 12 | DOI & Publisher | DOI + penerbit |
 
-**Kolom custom** ala SciSpace ("Add Columns"): user dapat menambah kolom apa saja, mis.
+**Kolom custom** (fitur "Add Columns"): user dapat menambah kolom apa saja, mis.
 `Relevance (0–10)`, `Citations`, `Sampling Method`, `Instruments`, `Recommendations`. Kolom custom
 diisi dari isi paper, atau dari pertanyaan tambahan yang diminta user. Tambahkan ke tabel & JSON,
 jangan dihapus kolom default tanpa izin.
@@ -134,7 +134,7 @@ candidate_papers.md   — FILE KERJA INTERNAL (bukan output utama)
 
 Untuk tiap paper, isi semua kolom. Aturan ringkas:
 
-### Cara Mengisi Sel (Meniru SciSpace Data Extraction)
+### Cara Mengisi Sel (Meniru Data Extraction)
 
 Sel BUKAN frasa pendek, melainkan **2–5 kalimat lengkap** yang memuat detail paper, dan **setiap
 kalimat/klaim diberi penanda sumber** (provenance) berupa kode bagian + nomor paragraf di belakangnya:
@@ -193,7 +193,7 @@ menjadi baris tabel — ikuti preferensi user; untuk jumlah besar (> 10 paper) s
 > Load `references/table-builder.md` untuk detail render & export.
 > Gunakan template `templates/paper_review_table_template.md`.
 
-Workflow ini menghasilkan **satu sumber data → banyak format** (seperti SciSpace Data Extraction):
+Workflow ini menghasilkan **satu sumber data → banyak format** (data extraction):
 
 1. **Bangun `papers.json`** dulu — data terstruktur per paper (metadata biblio + nilai tiap kolom).
    Ini adalah *master data*; seluruh format diturunkan dari sini.
@@ -218,7 +218,7 @@ Workflow ini menghasilkan **satu sumber data → banyak format** (seperti SciSpa
    | Abstract | Introduction | Method | Results | Discussion | Limitations | Conclusion | Future Work |
    ```
    Penanda seperti `[M-2]` = klaim diambil dari bagian Method, paragraf 2. Ini yang membuat hasil
-   **dapat ditelusuri ke bagian paper** (seperti nomor kutipan kecil di SciSpace).
+   **dapat ditelusuri ke bagian paper** (penandaan kode bagian + nomor paragraf, seperti nomor kutipan kecil).
 
 > Jika `openpyxl` belum terpasang untuk XLSX: jalankan `pip3 install openpyxl`, atau output CSV
 > sebagai gantinya dan beri tahu user.
@@ -300,7 +300,8 @@ Dari [X] kandidat:
 Subset dari **bimajanuri/academic-writing-skill** (pencarian literatur + literature matrix),
 yang mereferensikan metodologi dari Master-cai/Research-Paper-Writing-Skills, SNL-UCSB/paper-writing-skill,
 dan WenyuChiou/ai-research-skills (literature triage matrix). Struktur tabel & daftar format ekspor
-meniru **SciSpace Literature Review / Data Extraction** (synthesis matrix + CSV/XLSX/BIB/XML/RIS).
+meniru fitur **Literature Review / Data Extraction** pada platform reference-manager AI
+(synthesis matrix + CSV/XLSX/BIB/XML/RIS).
 Lihat README academic-writing-skill untuk detail.
 
 ## Platform Note

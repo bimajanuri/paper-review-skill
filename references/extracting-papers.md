@@ -49,7 +49,7 @@ Baca bagian paper dalam urutan ini:
 
 Untuk `.tex`, ekstraksi lebih mudah: `\title{}`, `\author{}`, `\begin{abstract}...`, section `\section{Method}`.
 
-## 3a. Mengisi Sel Komprehensif + Penanda Sumber (Seperti SciSpace)
+## 3a. Mengisi Sel Komprehensif + Penanda Sumber (Data Extraction)
 
 Sel tabel berisi **2–5 kalimat lengkap** (bukan frasa pendek) yang merangkum detail paper, dan tiap
 kalimat/klaim diakhiri **penanda sumber `[KODE-n]`**: kode bagian + nomor paragraf di bagian tsb.

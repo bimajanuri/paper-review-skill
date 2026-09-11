@@ -1,7 +1,7 @@
 # Table Builder — Render & Export Tabel Review
 
 Panduan merakit output tabel (Markdown) **dan export 5 format** (CSV / XLSX / BIB / XML / RIS) dari
-hasil ekstraksi — ala **SciSpace Literature Review / Data Extraction** (synthesis matrix).
+hasil ekstraksi — **Literature Review / Data Extraction** (synthesis matrix) ala reference-manager AI.
 
 ## 1. Konsep: Satu Data → Banyak Format
 
@@ -49,7 +49,7 @@ Aturan:
   tidak tersedia → `—` di tabel, tidak mengarang.
 - `authors` berupa **list** `["Surname, Given", ...]` — wajib untuk BibTeX/RIS/XML yang benar.
 
-## 3. Kolom Default (ala SciSpace)
+## 3. Kolom Default (Synthesis Matrix)
 
 Urutan kolom yang dirender ke tabel/CSV/XLSX (label → key):
 
@@ -82,7 +82,7 @@ paper. `DEFAULT_COLS` di `export_formats.py` dapat dioverride — cukup tambahka
 | 1  | Smith, John et al. — "..." | Jurnal | 2026 | Penelitian bertujuan ... [I-1] | ... |
 ```
 
-- Sel berisi **2–5 kalimat lengkap** (komprehensif, ala SciSpace Data Extraction), bukan frasa pendek —
+- Sel berisi **2–5 kalimat lengkap** (komprehensif, ala data extraction reference-manager AI), bukan frasa pendek —
   lihat `references/extracting-papers.md` §3a. Setiap kalimat/klaim diakhiri **penanda sumber**
   `[KODE-n]` (bagian + nomor paragraf), mis. `[M-2]`, `[R-1][R-3]`.
 - Jangan pakai baris baru dalam sel markdown — kalimat-kalimat digabung dalam satu baris sel.
