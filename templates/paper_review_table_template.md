@@ -1,5 +1,8 @@
 # Template Tabel Review Paper (SciSpace-Style)
 
+> ⚠️ **Output UTAMA** adalah tabel penuh di bawah ini — **setiap paper = satu baris**, semua kolom
+> review terisi. Bagian Metadata/Triase/Legenda adalah pelengkap, bukan pengganti tabel.
+
 Salin struktur ini untuk output tabel. **Blok sitasi + blok ekstraksi** (ala SciSpace Literature Review)
 + ruang kolom custom. Isi `—` bila data tidak tersedia di paper/sumber.
 

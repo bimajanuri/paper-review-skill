@@ -89,11 +89,13 @@ paper-review/
 
 ## Aturan Penting
 
-1. Tidak mengarang paper — setiap baris wajib punya DOI terverifikasi atau file lokal yang dibaca.
-2. Tidak mengarang isi kolom — `—` untuk data tak tersedia, `(diringkas)` untuk inferensi.
-3. Ambil klaim dari paper, bukan opini agent (kolom Novelty/Gaps).
-4. Human-in-the-loop — agent mengusulkan, user memutuskan kolom, jumlah, dan definisi Gaps.
-5. Reproducible — sertakan tanggal search, kata kunci, dan kombinasi yang dipakai.
+1. **Output utama = tabel penuh per-paper** — setiap paper satu baris, semua kolom review terisi.
+   Daftar kandidat/recap count hanyalah pelengkap, bukan pengganti tabel.
+2. Tidak mengarang paper — setiap baris wajib punya DOI terverifikasi atau file lokal yang dibaca.
+3. Tidak mengarang isi kolom — `—` untuk data tak tersedia, `(diringkas)` untuk inferensi.
+4. Ambil klaim dari paper, bukan opini agent (kolom Novelty/Gaps).
+5. Human-in-the-loop — agent mengusulkan, user memutuskan kolom, jumlah, dan definisi Gaps.
+6. Reproducible — sertakan tanggal search, kata kunci, dan kombinasi yang dipakai.
 
 ## Attribution
 

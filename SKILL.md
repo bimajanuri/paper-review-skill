@@ -109,18 +109,28 @@ muncul sekali; prefer data dari file lokal (lebih lengkap) atas metadata search.
 
 ### Output Step 1
 ```
-candidate_papers.md   — daftar kandidat + mode sumber + skor relevansi + status verifikasi DOI
+candidate_papers.md   — FILE KERJA INTERNAL (bukan output utama)
+                         daftar kandidat + skor relevansi + status verifikasi DOI
 ```
+
+> ⚠️ **JANGAN berhenti di Step 1.** Daftar kandidat hanyalah *working file internal*. Output yang
+> wajib diserahkan ke user adalah **tabel penuh per-paper** (literature_table.md + papers.json + export),
+> di mana **setiap paper = satu baris** dengan semua kolom review terisi. Recap/count hanya pelengkap di akhir.
 
 ### Quality Gate 1
 - [ ] Jumlah kandidat ≥ jumlah target (atau disepakati)
 - [ ] Setiap baris dilengkapi DOI atau file lokal (bukti keberadaan)
 - [ ] DOI gagal diverifikasi sudah ditandai `UNVERIFIED`
-- [ ] User setuju daftar paper sebelum ekstraksi penuh
+- [ ] **Izin sekali di awal sudah cukup** — jangan minta konfirmasi per-candidate; setelah scope jelas
+      (topik, jumlah, kolom), langsung ekstraksi penuh semua paper yang lolos.
 
 ---
 
 ## STEP 2 — Ekstraksi Per Paper
+
+> **Mandat utama skill ini:** bangun tabel penuh di mana **setiap paper = satu baris** dan **setiap
+> kolom review terisi** (atau `—` bila data tidak tersedia). Jangan mengganti output ini dengan tabel
+> rekap (jumlah paper, summary gabungan, atau daftar kandidat).
 
 Untuk tiap paper, isi semua kolom. Aturan ringkas:
 
@@ -181,14 +191,22 @@ Workflow ini menghasilkan **satu sumber data → banyak format** (seperti SciSpa
 
 ### Output Step 3
 ```
-papers.json          — master data terstruktur (metadata biblio + nilai kolom)
-literature_table.md  — tabel review final (markdown)
-literature_table.csv | .xlsx | .bib | .xml | .ris — export sesuai permintaan
+📋 OUTPUT UTAMA (wajib):
+  literature_table.md  — tabel review final: setiap paper 1 baris, semua kolom review terisi
+  papers.json          — master data terstruktur (metadata biblio + nilai kolom)
+🗂 EXPORT (sesuai permintaan):
+  literature_table.csv | .xlsx | .bib | .xml | .ris
 ```
+
+> Pastikan tabel di atas berisi **setiap hasil review per paper** (bukan ringkasan antar paper).
+> Jika user hanya melihat recap (count / daftar kandidat), itu artinya Anda berhenti terlalu cepat —
+> lanjutkan hingga tabel penuh per-paper selesai.
 
 ---
 
-## STEP 4 — Triase & Quality Gate
+## STEP 4 — Triase Ringkas & Quality Gate
+
+> Ringkasan ini **pelengkap di akhir** (bagian bawah literature_table.md), BUKAN pengganti tabel penuh.
 
 ### Laporan Triase
 ```
@@ -212,8 +230,8 @@ Dari [X] kandidat:
 
 | Permintaan | Action |
 |-----------|--------|
-| "Cari 15 paper tentang X dan buatkan tabel" | Mode A, default kolom → literature_table.md |
-| "Review semua paper di folder [path]" | Mode B, semua file → literature_table.md |
+| "Cari 15 paper tentang X dan buatkan tabel" | Mode A → **langsung tabel penuh per-paper** (literature_table.md) |
+| "Review semua paper di folder [path]" | Mode B → semua file → **tabel penuh per-paper** |
 | "Tabel dengan kolom tambahan Findings" | Step 0: tambah kolom custom `Findings` |
 | "Kombinasi search + folder saya" | Mode C, dedup DOI |
 | "Export ke CSV/Excel/BibTeX/XML/RIS" | Step 3: bangun papers.json → `export_formats.py` |
@@ -222,6 +240,8 @@ Dari [X] kandidat:
 
 ## Aturan Penting (Selalu Berlaku)
 
+0. **Output utama = tabel penuh per-paper.** Setiap paper = satu baris, semua kolom review terisi
+   (atau `—`). Recap count / daftar kandidat hanya pelengkap di akhir — JANGAN menyerahkannya sebagai hasil.
 1. **Jangan mengarang paper.** Setiap baris wajib punya DOI (dapat di-resolve) atau file lokal yang dibaca.
    Ragu → tandai `UNVERIFIED — cek manual`.
 2. **Jangan mengarang isi kolom.** Field tidak tersedia → `—`; inferensi → tandai `(diringkas)`.
