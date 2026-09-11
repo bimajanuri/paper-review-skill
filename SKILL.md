@@ -134,18 +134,43 @@ candidate_papers.md   — FILE KERJA INTERNAL (bukan output utama)
 
 Untuk tiap paper, isi semua kolom. Aturan ringkas:
 
-| Kolom | Sumber di paper | Catatan |
-|-------|-----------------|---------|
-| Title & Authors | Halaman judul / metadata | > 6 penulis → `Penulis1 et al.` |
-| Journal / Year | Halaman judul, header LaTeX, metadata | Tahun dari `publication_date` bila ada |
-| Purpose | Abstract & Intro | 1 kalimat; ringkasan inferensi → tandai `(diringkas)` |
-| Method | Method section | Desain; IV/DV; n=; sampel; instrumen; analisis |
-| Key Findings | Results / Abstract | Angka kunci (efek, p-value, n, dll.) |
-| Limitations | Discussion / Limitations | Pernyataan keterbatasan penulis |
-| Gaps | Intro (gap yang di-address) / pembahasan | sesuai kesepakatan Step 0 |
-| Theory Used | Intro / Lit Review | Tidak disebut → `Tidak disebut eksplisit` |
-| Novelty/Contribution | Intro & Conclusion | Ambil klaim paper, jangan opini sendiri |
-| Future Studies | Future Work / Conclusion | Tidak ada → `—` |
+### Cara Mengisi Sel (Meniru SciSpace Data Extraction)
+
+Sel BUKAN frasa pendek, melainkan **2–5 kalimat lengkap** yang memuat detail paper, dan **setiap
+kalimat/klaim diberi penanda sumber** (provenance) berupa kode bagian + nomor paragraf di belakangnya:
+
+```
+Contoh (kolom Method, Mode Folder):
+Penelitian menggunakan analisis komparatif statistik untuk membandingkan efektivitas
+metode Kanban dan Scrum pada proyek Agile berbiaya dan berjadwal tetap [M-2].
+Pengumpulan data memakai convenience sampling dari ahli manajemen proyek Agile
+berpengalaman ≥ 1 tahun [M-5][M-6]. Analisis data melalui Confirmatory Component
+Analysis (CCA) dan uji hipotesis korelasi intra-variabel, serta reliabilitas dengan CR
+dan Cronbach [M-7]. Studi mengecualikan batasan jadwal dan biaya, fokus pada sumber
+daya, ruang lingkup, dan risiko [M-8].
+```
+
+**Kode penanda (legend)**: | Kode | Bagian paper | (AB = Abstract, I = Introduction, M = Method, R = Results, D = Discussion, L = Limitations, F = Future Work, C = Conclusion). `[M-2]` = Method paragraf 2; `[D-1][D-2]` = klaim dari gabungan paragraf. Selipkan penanda tepat setelah kalimat sumbernya.
+
+- **Mode Folder/LaTeX** (teks lengkap): penanda = bagian + nomor paragraf nyata yang Anda baca.
+- **Mode Search** (hanya abstract/metadata): penanda `[AB]`; konten sel otomatis lebih ringkas karena
+  keterbatasan sumber — tulis kolom lain yang tak tersedia dengan `—` (bukan mengarang detail).
+- Jika beberapa kalimat berasal dari bagian sama, ulangi penanda di tiap kalimat.
+
+Aturan per kolom:
+
+| Kolom | Sumber di paper | Isi sel yang diharapkan |
+|-------|-----------------|-------------------------|
+| Title & Authors | Halaman judul / metadata | Judul + penulis; > 6 penulis → `Penulis1 et al.` |
+| Journal / Year | Halaman judul, header LaTeX, metadata | Nama jurnal / tahun |
+| Purpose | Abstract & Intro | 1–2 kalimat tujuan + `[AB]` / `[I-n]` |
+| Method (Variables/Samples) | Method section | Desain; **sampel (ukuran, teknik, komposisi)**; variabel; instrumen; analisis — tiap klaim ber-penanda `[M-n]` |
+| Key Findings | Results / Abstract | Hasil utama + angka kunci (efek, koefisien, p-value, n) — ber-penanda `[R-n]` |
+| Limitations | Discussion / Limitations | Tiap keterbatasan 1 kalimat + `[D-n]` / `[L-n]` |
+| Gaps | Intro / pembahasan | Gap yang di-address paper + `[I-n]` |
+| Theory Used | Intro / Lit Review | Teori + dasar penggunaannya + `[I-n]` |
+| Novelty/Contribution | Intro & Conclusion | Klaim kontribusi + `[I-n]` / `[C-n]` |
+| Future Studies | Future Work / Conclusion | **Semua** rekomendasi lanjutan, masing-masing + `[F-n]` / `[C-n]` |
 | DOI & Publisher | Metadata / file | `DOI: 10.xxxx/... \| Penerbit` |
 
 **Metadata biblio** (untuk export BibTeX/RIS/XML — kumpulkan bila tersedia dari metadata API/file):
@@ -184,7 +209,16 @@ Workflow ini menghasilkan **satu sumber data → banyak format** (seperti SciSpa
    - `.bib` — BibTeX `@article` siap import ke Zotero/JabRef/Overleaf
    - `.xml` — EndNote XML (`<records><record>`) siap import ke EndNote/Zotero
    - `.ris` — RIS `JOUR` siap import ke Zotero/Mendeley/EndNote
-4. Tambahkan **Metadata Pencarian** di atas tabel dan **Legenda** di bawah tabel.
+4. Tambahkan **Metadata Pencarian** di atas tabel dan **Legenda Penanda Sumber (provenance)** di bawah tabel:
+
+   ```markdown
+   **Legenda — kode bagian paper:**
+   | AB | I | M | R | D | L | C | F |
+   |----|---|---|---|---|---|---|---|
+   | Abstract | Introduction | Method | Results | Discussion | Limitations | Conclusion | Future Work |
+   ```
+   Penanda seperti `[M-2]` = klaim diambil dari bagian Method, paragraf 2. Ini yang membuat hasil
+   **dapat ditelusuri ke bagian paper** (seperti nomor kutipan kecil di SciSpace).
 
 > Jika `openpyxl` belum terpasang untuk XLSX: jalankan `pip3 install openpyxl`, atau output CSV
 > sebagai gantinya dan beri tahu user.

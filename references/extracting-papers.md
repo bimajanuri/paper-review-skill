@@ -49,6 +49,41 @@ Baca bagian paper dalam urutan ini:
 
 Untuk `.tex`, ekstraksi lebih mudah: `\title{}`, `\author{}`, `\begin{abstract}...`, section `\section{Method}`.
 
+## 3a. Mengisi Sel Komprehensif + Penanda Sumber (Seperti SciSpace)
+
+Sel tabel berisi **2–5 kalimat lengkap** (bukan frasa pendek) yang merangkum detail paper, dan tiap
+kalimat/klaim diakhiri **penanda sumber `[KODE-n]`**: kode bagian + nomor paragraf di bagian tsb.
+
+**Kode bagian:** `AB` Abstract · `I` Introduction · `M` Method · `R` Results · `D` Discussion ·
+`L` Limitations · `C` Conclusion · `F` Future Work
+
+Contoh kolom Future Studies (3 kalimat, masing-masing ber-penanda):
+```
+"Penelitian lanjutan perlu menguji hipotesis parameter model yang berbeda antar kelompok,
+terutama membandingkan > 2 kelompok, mis. Scrum vs Kanban [F-2]. Disarankan memakai teknik
+confidence set mutakhir dalam analisis multi-kelompok untuk mengevaluasi kesesuaian pendekatan
+[F-2]. Studi lebih lanjut diperlukan untuk menyelidiki dampak inklusi kelompok pada fitur
+pengukuran dan struktural karena asumsinya sering tidak akurat [D-1][F-1]."
+```
+
+Contoh kolom Method (detail: desain, sampling, analisis, pengecualian):
+```
+"Penelitian memakai analisis komparatif statistik untuk membandingkan efektivitas metode
+Kanban dan Scrum pada proyek Agile berbiaya dan berjadwal tetap [M-2]. Pengumpulan data
+menggunakan convenience sampling dari para ahli manajemen proyek Agile berpengalaman ≥ 1 tahun
+[M-5][M-6]. Analisis data via Confirmatory Component Analysis (CCA), uji hipotesis korelasi
+intra-variabel, dan reliabilitas dengan Composite Reliability (CR) & Cronbach [M-7]. Studi
+mengecualikan batasan jadwal dan biaya, fokus pada sumber daya, ruang lingkup, dan risiko [M-8]."
+```
+
+Aturan:
+1. Penanda diletakkan **persis setelah kalimat** sumbernya; gabungan → `[D-1][F-1]`.
+2. Paragraf dinomori dari awal bagian; Keliru ragu → tandai `[±n]` (perkiraan).
+3. **Mode Folder** → penanda bagian+paragraf nyata. **Mode Search** (hanya abstract) → sel lebih
+   ringkas, penanda `[AB]`. Jangan mengarang detail yang tidak ada di sumber.
+4. Kolom yang di paper tidak punya konten → `—` (jangan menulis dari opini).
+5. Untuk `.tex`, nomor paragraf mengikuti struktur `.tex` (mis. paragraf ke-2 di `\section{Method}`).
+
 ## 3b. Metadata Biblio untuk Export Sitasi
 
 Export `.bib`/`.ris`/`.xml` butuh metadata lengkap. Kalau tersedia di metadata API (OpenAlex

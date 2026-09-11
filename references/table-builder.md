@@ -79,12 +79,24 @@ paper. `DEFAULT_COLS` di `export_formats.py` dapat dioverride — cukup tambahka
 ```markdown
 | No | Title & Authors | Journal | Year | Purpose | ... |
 |----|-----------------|---------|-------|---------|-----|
-| 1  | Smith, John et al. — "..." | Jurnal | 2026 | ... | ... |
+| 1  | Smith, John et al. — "..." | Jurnal | 2026 | Penelitian bertujuan ... [I-1] | ... |
 ```
 
-- Gunakan titik koma (`;`) sebagai pemisah dalam sel, bukan baris baru.
+- Sel berisi **2–5 kalimat lengkap** (komprehensif, ala SciSpace Data Extraction), bukan frasa pendek —
+  lihat `references/extracting-papers.md` §3a. Setiap kalimat/klaim diakhiri **penanda sumber**
+  `[KODE-n]` (bagian + nomor paragraf), mis. `[M-2]`, `[R-1][R-3]`.
+- Jangan pakai baris baru dalam sel markdown — kalimat-kalimat digabung dalam satu baris sel.
 - Di atas tabel: **Metadata Pencarian** (mode, topik, query, jumlah target/jumlah baris, tanggal, sumber).
-- Di bawah tabel: **Legenda** (`—`, `(diringkas)`, `(tidak eksplisit)`, `UNVERIFIED`).
+- Di bawah tabel: **Legenda Penanda Sumber**:
+
+  ```markdown
+  **Legenda — kode bagian paper:** AB=Abstract · I=Introduction · M=Method · R=Results ·
+  D=Discussion · L=Limitations · C=Conclusion · F=Future Work
+  (penanda `[M-2]` = klaim dari bagian Method, paragraf 2)
+  ```
+
+  Serta legenda lain: `—` (data tak tersedia), `(diringkas)` (inferensi), `[±n]` (perkiraan paragraf),
+  `UNVERIFIED` (DOI belum diverifikasi).
 
 ## 5. Export 5 Format
 

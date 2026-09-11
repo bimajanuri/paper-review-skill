@@ -13,6 +13,9 @@ Skill ini adalah subset terfokus dari [`bimajanuri/academic-writing-skill`](http
 - **Tiga mode input**: Search (pencarian online), Folder (baca PDF/LaTeX lokal), Hybrid (gabungan + dedup)
 - **Tabel ala SciSpace Literature Review**: blok sitasi (Title & Authors, Journal, Year, DOI & Publisher)
   + blok ekstraksi (Purpose, Method, Key Findings, Limitations, Gaps, Theory Used, Novelty, Future Studies)
+- **Sel komprehensif + provenance**: tiap kolom ekstraksi berisi 2–5 kalimat detail (bukan frasa pendek),
+  dan setiap kalimat diberi **penanda sumber** `[KODE-n]` (bagian paper + nomor paragraf, mis. `[M-2]`) —
+  sehingga tiap klaim dapat ditelusuri ke bagian paper, seperti nomor kutipan kecil di SciSpace
 - **Kolom custom**: user dapat menambah kolom apa saja (Relevance, Citations, Sampling Method, dll.)
 - **Export 5 format** dari satu master data `papers.json`:
   CSV, Excel (XLSX), BibTeX (BIB), EndNote XML, RIS
