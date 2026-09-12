@@ -62,8 +62,9 @@ Menghasilkan `literature_table.csv`, `.xlsx`, `.bib`, `.xml`, `.ris`.
 Dari [X] kandidat:
 - Lolos relevansi ≥ 7/10 : [Y]
 - Mode search : [a] | mode folder : [b] | hybrid : [c]
+- Scopus Q1 : [q1] | Q2 : [q2] | Q3 : [q3] | Q4 : [q4] | non-Scopus : [n]   (bila filter quartile dipakai)
 - DOI terverifikasi : [d] | UNVERIFIED : [e]
-- Dibuang (relevansi < 7 / duplikat / tidak terbukti) : [f]
+- Dibuang (relevansi < 7 / duplikat / tidak terbukti / di luar filter quartile) : [f]
 ```
 
 ## Legenda

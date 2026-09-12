@@ -49,7 +49,8 @@ Tanyakan parameter berikut (minimalkan bila konteks sudah jelas):
 | Kolom table | default 12 kolom (literature review matrix) + kolom custom | default |
 | Makna kolom "Gaps" | `gap yang di-address paper` vs `gap/kelangkaan yang bisa jadi riset baru` | gap yang di-address paper (Limitations sudah punya kolom sendiri) |
 | Rentang tahun | bebas | 5 tahun terakhir (search) |
-| Filter kualitas jurnal | Scopus Quartile / peer-reviewed saja / tanpa filter | tanpa filter tapi tetap tag sumber |
+| Filter kualitas jurnal | Scopus Quartile (Q1/Q2/Q3/Q4) / peer-reviewed saja / tanpa filter | tanpa filter tapi tag quartile (detail di `search-sources.md`§5) |
+| Jenis dokumen | artikel riset / review / semua | artikel riset + review |
 | Bahasa paper | Indonesia / Inggris / semua | Inggris |
 | Format output tabel | Markdown | Markdown |
 | Format ekspor | CSV / Excel (XLSX) / BibTeX (BIB) / XML (EndNote) / RIS / semua | Bergantung permintaan (default: MD saja; "export semua" → 5 format) |
@@ -110,7 +111,7 @@ muncul sekali; prefer data dari file lokal (lebih lengkap) atas metadata search.
 ### Output Step 1
 ```
 candidate_papers.md   — FILE KERJA INTERNAL (bukan output utama)
-                         daftar kandidat + skor relevansi + status verifikasi DOI
+                         daftar kandidat + skor relevansi + status quartile + status verifikasi DOI
 ```
 
 > ⚠️ **JANGAN berhenti di Step 1.** Daftar kandidat hanyalah *working file internal*. Output yang
@@ -247,8 +248,9 @@ Workflow ini menghasilkan **satu sumber data → banyak format** (data extractio
 Dari [X] kandidat:
 - Lolos relevansi ≥ 7/10 : [Y]
 - Mode search : [a] | mode folder : [b] | hybrid : [c]
+- Scopus Q1 : [q1] | Q2 : [q2] | Q3 : [q3] | Q4 : [q4] | non-Scopus : [n]   (bila filter quartile dipakai)
 - DOI terverifikasi : [d] | UNVERIFIED : [e]
-- Dibuang (relevansi < 7 / duplikat / tidak terbukti) : [f]
+- Dibuang (relevansi < 7 / duplikat / tidak terbukti / di luar filter quartile) : [f]
 ```
 
 ### Quality Gate Akhir
@@ -270,6 +272,8 @@ Dari [X] kandidat:
 | "Kombinasi search + folder saya" | Mode C, dedup DOI |
 | "Export ke CSV/Excel/BibTeX/XML/RIS" | Step 3: bangun papers.json → `export_formats.py` |
 | "Export semua 5 format" | `--formats csv,xlsx,bib,xml,ris` |
+| "Hanya paper Q1/Q1–Q2" | Search: filter quartile (detail `search-sources.md`§5) |
+| "Tambah literatur fondasi / snowballing" | Round 2 (backward/forward) + Round 3 (highly-cited) |
 | "Tabel dengan makna Gaps = gap riset baru" | Step 0: ubah definisi kolom Gaps |
 
 ## Aturan Penting (Selalu Berlaku)

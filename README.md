@@ -20,6 +20,10 @@ Skill ini adalah subset terfokus dari [`bimajanuri/academic-writing-skill`](http
 - **Export 5 format** dari satu master data `papers.json`:
   CSV, Excel (XLSX), BibTeX (BIB), EndNote XML, RIS
 - **Sumber pencarian gratis**: OpenAlex / Semantic Scholar / arXiv + web tools
+- **Filter Scopus Quartile (Q1–Q4)**: verifikasi via SJR (label `ESTIMATED`/`UNVERIFIED`), skema filter
+  Q1 / Q1–Q2 / Q3–Q4 / tanpa filter, non-Scopus di tabel terpisah `[non-Scopus]`
+- **Strategi multi-tahap**: Round 1 (pencarian langsung), Round 2 (snowballing backward/forward),
+  Round 3 (literatur fondasi highly-cited) + filter jenis dokumen (artikel riset/review/semua)
 - **Membaca PDF** via `scripts/extract_text.sh` (poppler) dan LaTeX dibaca langsung
 - **Anti-hallucination**: tidak mengarang paper/DOI/isi kolom; tandai `UNVERIFIED`, `(diringkas)`, `—`
 - **Triase & quality gate** dengan laporan statistik per pencarian
