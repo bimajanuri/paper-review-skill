@@ -1,19 +1,20 @@
 # Paper Review Skill
 
-**Paper review and literature synthesis for AI agents.** This skill creates a structured
-literature-review matrix from online searches, local PDF/LaTeX files, or both. It produces a
-master `papers.json`, a Markdown table, and optional CSV, XLSX, BibTeX, EndNote XML, and RIS
-exports.
+Paper Review helps AI agents turn a set of academic papers into a clear, traceable literature
+matrix. It can search online sources, read a local collection of PDF or LaTeX files, or combine
+both. The workflow keeps `papers.json` as the master dataset and can produce Markdown, CSV, XLSX,
+BibTeX, EndNote XML, and RIS outputs from the same records.
 
 ## Features
 
-- Search, Folder, and Hybrid input modes with DOI/title deduplication.
-- Twelve default extraction columns plus user-defined custom columns.
-- Source provenance markers such as `[AB]`, `[M-2]`, and `[R-1]` for every factual extraction.
+- Search, Folder, and Hybrid input modes, with deduplication by DOI or normalized title.
+- Twelve default extraction columns, plus any custom columns the user needs.
+- Source markers such as `[AB]`, `[M-2]`, and `[R-1]` so each factual extraction can be traced back
+  to the paper.
 - OpenAlex, Semantic Scholar, arXiv, Crossref, DOI, publisher, and web-source workflows.
 - Scopus quartile tagging and multi-round search, including backward/forward snowballing.
 - PDF extraction through `scripts/extract_text.sh` and direct LaTeX reading.
-- Anti-fabrication rules with `—`, `(summarized)`, and `UNVERIFIED` status markers.
+- Anti-fabrication rules using `—`, `(summarized)`, and `UNVERIFIED` status markers.
 - Output guardrails for metadata, provenance, claim scope, and export consistency.
 - Evaluation rubric with hard-failure precedence and `PASS`, `PASS_WITH_FLAGS`, or `FAIL` status.
 
@@ -27,15 +28,15 @@ STEP 3: BUILD     → create papers.json, render Markdown, and export requested 
 STEP 4: VALIDATE  → run guardrails, evaluation, DOI checks, and quality gates
 ```
 
-The complete output is always a per-paper table. Candidate lists and aggregate statistics are
-supplementary and must not replace the table.
+The main deliverable is always a complete, one-row-per-paper table. Candidate lists and aggregate
+statistics are useful supporting material, but they never replace the table.
 
 ## Compatibility and prerequisites
 
-This skill follows the folder-based Agent Skills convention. The host must discover a directory
-containing `SKILL.md` and allow access to its `references/`, `protocols/`, `templates/`, and
-`scripts/` files. There is no mandatory API key, database, runtime service, or OS-specific
-dependency. Always install the complete directory.
+Paper Review follows the folder-based Agent Skills convention. The host must be able to discover a
+directory containing `SKILL.md` and read its `references/`, `protocols/`, `templates/`, and
+`scripts/` files. No API key, database, background service, or operating-system-specific runtime
+is required. Install the complete directory so every referenced module remains available.
 
 | Host | Project path | Global path | Activation and verification |
 |---|---|---|---|
@@ -48,7 +49,7 @@ dependency. Always install the complete directory.
 | Codex, Cursor, Windsurf, other compatible hosts | Host-specific path or `.agents/skills/paper-review/` | Host-specific | Reload skills and verify discovery |
 
 ChatGPT Skills availability and upload permissions depend on the account, workspace, and product
-surface. If a host does not support folder-based Skills, use its documented import/project-files
+surface. If a host does not support folder-based Skills, use its documented import or project-file
 mechanism and provide `SKILL.md` together with every referenced module.
 
 ### Optional prerequisites
@@ -118,13 +119,52 @@ Copy the complete directory into the host's documented skills folder, reload the
 that `paper-review` is discoverable. Copying only `SKILL.md` is insufficient for full extraction
 and export behavior.
 
-## Activation example
+## Usage
+
+The skill activates automatically when a request clearly asks for a literature matrix, paper-review
+table, paper synthesis, PDF/LaTeX extraction, or bibliography export. Use natural language, or name
+`paper-review` explicitly when you want to make the workflow unambiguous. If the request leaves the
+mode, scope, columns, filters, or export formats open, the skill clarifies those choices first.
+
+### Search mode
 
 ```text
-Use the paper-review skill. Review 15 papers on [topic] using Search mode.
-Lock the columns and filters first, preserve provenance for every factual sentence,
-verify DOI metadata, build papers.json, run output guardrails, and report
-PASS, PASS_WITH_FLAGS, or FAIL before exporting CSV, XLSX, BibTeX, XML, or RIS.
+Use paper-review in Search mode. Review 15 papers on [topic] from the last five years.
+Lock the columns and filters first. Preserve provenance for every factual sentence,
+verify DOI metadata, build `papers.json`, run the output guardrails, and report
+`PASS`, `PASS_WITH_FLAGS`, or `FAIL` before exporting CSV, XLSX, BibTeX, XML, or RIS.
+```
+
+### Folder mode
+
+```text
+Use paper-review in Folder mode. Review every PDF and LaTeX paper in [folder].
+Extract the agreed fields with provenance markers. Use `—` when information is unavailable,
+verify metadata where possible, build the complete per-paper table, and report the final
+guardrail status.
+```
+
+### Hybrid mode
+
+```text
+Use paper-review in Hybrid mode. Combine verified search results about [topic] with
+the papers in [folder]. Deduplicate by DOI, then normalized title; prefer local full text;
+build `papers.json` and `literature_table.md`; export the requested formats only after validation.
+```
+
+### Targeted requests
+
+```text
+Create a literature matrix with these additional columns: [columns].
+```
+
+```text
+Export the validated papers.json to CSV, XLSX, BibTeX, EndNote XML, and RIS.
+```
+
+```text
+Review this matrix for missing provenance, fabricated metadata, DOI mismatches,
+unsupported findings, and inconsistencies across export formats.
 ```
 
 ## Default matrix columns
@@ -142,8 +182,8 @@ PASS, PASS_WITH_FLAGS, or FAIL before exporting CSV, XLSX, BibTeX, XML, or RIS.
 11. Future Studies
 12. DOI & Publisher
 
-Every unavailable extraction value must be `—`. Search-only records must not claim full-text
-methods or findings that are not present in the available abstract or metadata.
+Use `—` for every unavailable extraction value. Search-only records must not claim full-text
+methods or findings that are absent from the available abstract or metadata.
 
 ## Repository structure
 

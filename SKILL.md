@@ -14,6 +14,20 @@ This skill builds a structured literature-review and data-extraction matrix. It 
 Folder, and Hybrid input modes. All instructions in this file and its referenced modules are in
 English. Follow the user's requested output language for extracted content.
 
+## Usage
+
+The skill activates automatically for literature-matrix, paper-review, paper-synthesis, PDF/LaTeX
+extraction, and bibliography-export requests. Users may also invoke it explicitly by name:
+
+```text
+Use paper-review in Search mode. Review 15 papers on [topic], preserve provenance,
+verify DOI metadata, build papers.json, and validate before exporting.
+```
+
+Select `Search`, `Folder`, or `Hybrid` from the request. If the mode, scope, columns, filters, or
+export formats are ambiguous, ask once before acquisition. Do not require a slash command when the
+host supports natural-language skill activation.
+
 ## Mandatory load order
 
 1. Load this `SKILL.md`.
