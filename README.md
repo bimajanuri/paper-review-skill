@@ -1,117 +1,179 @@
 # Paper Review Skill
 
-**Skill review & sintesis literatur untuk AI coding agents** (Claude Code, OpenCode, dan agen berbasis
-Agent Skills lainnya). Memproduksi **tabel review paper** (synthesis matrix / literature review matrix)
-dari dua sumber: (1) **pencarian online** berdasarkan topik + kata kunci + jumlah target, dan
-(2) **folder lokal** berisi paper berformat PDF/LaTeX. Konten **bilingual** (Bahasa Indonesia / English).
+**Paper review and literature synthesis for AI agents.** This skill creates a structured
+literature-review matrix from online searches, local PDF/LaTeX files, or both. It produces a
+master `papers.json`, a Markdown table, and optional CSV, XLSX, BibTeX, EndNote XML, and RIS
+exports.
 
-Skill ini adalah subset terfokus dari [`bimajanuri/academic-writing-skill`](https://github.com/bimajanuri/academic-writing-skill)
-— hanya bagian pencarian literatur + ekstraksi metadata + penyusunan tabel.
+## Features
 
-## Fitur Utama
+- Search, Folder, and Hybrid input modes with DOI/title deduplication.
+- Twelve default extraction columns plus user-defined custom columns.
+- Source provenance markers such as `[AB]`, `[M-2]`, and `[R-1]` for every factual extraction.
+- OpenAlex, Semantic Scholar, arXiv, Crossref, DOI, publisher, and web-source workflows.
+- Scopus quartile tagging and multi-round search, including backward/forward snowballing.
+- PDF extraction through `scripts/extract_text.sh` and direct LaTeX reading.
+- Anti-fabrication rules with `—`, `(summarized)`, and `UNVERIFIED` status markers.
+- Output guardrails for metadata, provenance, claim scope, and export consistency.
+- Evaluation rubric with hard-failure precedence and `PASS`, `PASS_WITH_FLAGS`, or `FAIL` status.
 
-- **Tiga mode input**: Search (pencarian online), Folder (baca PDF/LaTeX lokal), Hybrid (gabungan + dedup)
-- **Tabel literature review (synthesis matrix)**: blok sitasi (Title & Authors, Journal, Year, DOI & Publisher)
-  + blok ekstraksi (Purpose, Method, Key Findings, Limitations, Gaps, Theory Used, Novelty, Future Studies)
-- **Sel komprehensif + provenance**: tiap kolom ekstraksi berisi 2–5 kalimat detail (bukan frasa pendek),
-  dan setiap kalimat diberi **penanda sumber** `[KODE-n]` (bagian paper + nomor paragraf, mis. `[M-2]`) —
-  sehingga tiap klaim dapat ditelusuri ke bagian paper (kode bagian + nomor paragraf)
-- **Kolom custom**: user dapat menambah kolom apa saja (Relevance, Citations, Sampling Method, dll.)
-- **Export 5 format** dari satu master data `papers.json`:
-  CSV, Excel (XLSX), BibTeX (BIB), EndNote XML, RIS
-- **Sumber pencarian gratis**: OpenAlex / Semantic Scholar / arXiv + web tools
-- **Filter Scopus Quartile (Q1–Q4)**: verifikasi via SJR (label `ESTIMATED`/`UNVERIFIED`), skema filter
-  Q1 / Q1–Q2 / Q3–Q4 / tanpa filter, non-Scopus di tabel terpisah `[non-Scopus]`
-- **Strategi multi-tahap**: Round 1 (pencarian langsung), Round 2 (snowballing backward/forward),
-  Round 3 (literatur fondasi highly-cited) + filter jenis dokumen (artikel riset/review/semua)
-- **Membaca PDF** via `scripts/extract_text.sh` (poppler) dan LaTeX dibaca langsung
-- **Anti-hallucination**: tidak mengarang paper/DOI/isi kolom; tandai `UNVERIFIED`, `(diringkas)`, `—`
-- **Triase & quality gate** dengan laporan statistik per pencarian
+## Workflow
 
-## Instalasi
+```text
+STEP 0: CLARIFY   → input mode, topic, target count, columns, filters, language, export format
+STEP 1: ACQUIRE   → collect, deduplicate, and verify papers
+STEP 2: EXTRACT   → read abstracts/full text and populate every agreed field
+STEP 3: BUILD     → create papers.json, render Markdown, and export requested formats
+STEP 4: VALIDATE  → run guardrails, evaluation, DOI checks, and quality gates
+```
+
+The complete output is always a per-paper table. Candidate lists and aggregate statistics are
+supplementary and must not replace the table.
+
+## Compatibility and prerequisites
+
+This skill follows the folder-based Agent Skills convention. The host must discover a directory
+containing `SKILL.md` and allow access to its `references/`, `protocols/`, `templates/`, and
+`scripts/` files. There is no mandatory API key, database, runtime service, or OS-specific
+dependency. Always install the complete directory.
+
+| Host | Project path | Global path | Activation and verification |
+|---|---|---|---|
+| Claude Code | `.claude/skills/paper-review/` | `~/.claude/skills/paper-review/` | Request a literature matrix; use `/skills` if available |
+| OpenCode | `.opencode/skills/paper-review/` or `.agents/skills/paper-review/` | `~/.config/opencode/skills/paper-review/` | Enable the `skill` tool and request `paper-review` |
+| Gemini CLI | `.gemini/skills/paper-review/` or `.agents/skills/paper-review/` | `~/.gemini/skills/paper-review/` | Run `/skills`, then request a paper review |
+| GitHub Copilot CLI | `.github/skills/paper-review/` or `.agents/skills/paper-review/` | `~/.copilot/skills/paper-review/` | Run `/skills reload`, then `/skills info paper-review` |
+| Antigravity | `.agents/skills/paper-review/` | `~/.gemini/config/skills/paper-review/` | Start a matching literature-review task |
+| ChatGPT Skills | Upload the complete directory or ZIP | Product-managed | Import it where Skills are enabled and invoke it |
+| Codex, Cursor, Windsurf, other compatible hosts | Host-specific path or `.agents/skills/paper-review/` | Host-specific | Reload skills and verify discovery |
+
+ChatGPT Skills availability and upload permissions depend on the account, workspace, and product
+surface. If a host does not support folder-based Skills, use its documented import/project-files
+mechanism and provide `SKILL.md` together with every referenced module.
+
+### Optional prerequisites
+
+- **Poppler** (`pdftotext`) for PDF extraction: `brew install poppler` on macOS.
+- **Python 3** for the export script.
+- **openpyxl** for XLSX output: `python3 -m pip install openpyxl`.
+- **Web access** for live metadata, DOI, publisher, and quartile verification.
+- **Zotero, EndNote, or Mendeley** for importing generated bibliography files.
+
+## Installation
+
+Use the repository directory as the source path in the commands below.
 
 ### Claude Code
 
 ```bash
-# Opsi 1 — symlink (kanonik, sekali update)
-mkdir -p ~/.agents/skills
-ln -s $(pwd) ~/.agents/skills/paper-review
-ln -s ../../.agents/skills/paper-review ~/.claude/skills/paper-review
-
-# Opsi 2 — salin langsung
-cp -R . ~/.claude/skills/paper-review
+mkdir -p ~/.agents/skills ~/.claude/skills
+ln -s /path/to/paper-review ~/.agents/skills/paper-review
+ln -s ~/.agents/skills/paper-review ~/.claude/skills/paper-review
+# Or copy directly:
+cp -R /path/to/paper-review ~/.claude/skills/paper-review
 ```
 
 ### OpenCode
 
 ```bash
-# Opsi 1 — symlink
-ln -s ../../.agents/skills/paper-review ~/.config/opencode/skills/paper-review
-
-# Opsi 2 — salin langsung
-cp -R . ~/.config/opencode/skills/paper-review
+mkdir -p ~/.config/opencode/skills
+cp -R /path/to/paper-review ~/.config/opencode/skills/paper-review
 ```
 
-> Rekomendasi: simpan repo ini sebagai kanonik di `~/.agents/skills/paper-review`, lalu **symlink** ke
-> folder skills masing-masing klien. Edit cukup sekali di sumber.
+### Gemini CLI
 
-## Penggunaan
-
-Skill aktif otomatis saat user meminta, misalnya:
-
-- "Cari 15 paper tentang X dan buatkan tabelnya"
-- "Review semua paper di folder [path]"
-- "Bikin tabel literatur dengan kolom tambahan Findings"
-- "Kombinasi hasil search + folder saya"
-- "Export tabel ke CSV/Excel/BibTeX/XML/RIS"
-- "Export semua 5 format"
-
-Aliran kerja: **Klarifikasi → Akuisisi paper → Ekstraksi per-field (papers.json) → Render tabel →
-Export 5 format → Triase & quality gate.**
-
-## Struktur Repo
-
+```bash
+mkdir -p ~/.gemini/skills
+cp -R /path/to/paper-review ~/.gemini/skills/paper-review
+# In Gemini CLI:
+/skills
 ```
+
+### GitHub Copilot CLI
+
+```bash
+mkdir -p ~/.copilot/skills
+cp -R /path/to/paper-review ~/.copilot/skills/paper-review
+# In Copilot CLI:
+/skills reload
+/skills info paper-review
+```
+
+### Antigravity
+
+```bash
+mkdir -p ~/.gemini/config/skills
+cp -R /path/to/paper-review ~/.gemini/config/skills/paper-review
+```
+
+### ChatGPT Skills
+
+When Skills are enabled, upload `paper-review/` as a directory or ZIP. Preserve `SKILL.md`,
+`protocols/`, `references/`, `templates/`, `scripts/`, and `tests/`. If Skills are unavailable,
+use the platform's custom-instructions or project-files mechanism with the complete directory.
+
+### Other compatible hosts
+
+Copy the complete directory into the host's documented skills folder, reload the host, and verify
+that `paper-review` is discoverable. Copying only `SKILL.md` is insufficient for full extraction
+and export behavior.
+
+## Activation example
+
+```text
+Use the paper-review skill. Review 15 papers on [topic] using Search mode.
+Lock the columns and filters first, preserve provenance for every factual sentence,
+verify DOI metadata, build papers.json, run output guardrails, and report
+PASS, PASS_WITH_FLAGS, or FAIL before exporting CSV, XLSX, BibTeX, XML, or RIS.
+```
+
+## Default matrix columns
+
+1. Title & Authors
+2. Journal
+3. Year
+4. Purpose
+5. Method (Variables/Samples)
+6. Key Findings
+7. Limitations
+8. Gaps
+9. Theory Used
+10. Novelty/Contribution
+11. Future Studies
+12. DOI & Publisher
+
+Every unavailable extraction value must be `—`. Search-only records must not claim full-text
+methods or findings that are not present in the available abstract or metadata.
+
+## Repository structure
+
+```text
 paper-review/
-├── SKILL.md                          # Pintu masuk & orchestrator
+├── SKILL.md
+├── protocols/
+│   ├── output-guardrails.md
+│   └── evaluation.md
 ├── references/
-│   ├── search-sources.md             # Pencarian online (OpenAlex/Semantic Scholar/arXiv)
-│   ├── extracting-papers.md          # Baca folder PDF/LaTeX + ekstraksi per-field
-│   └── table-builder.md              # Skema papers.json, render tabel, export 5 format
-├── templates/
-│   └── paper_review_table_template.md  # Template tabel review (synthesis matrix)
-├── scripts/
-│   ├── extract_text.sh               # Ekstraksi teks PDF via pdftotext
-│   └── export_formats.py             # Export CSV/XLSX/BIB/XML/RIS dari papers.json
-├── tests/
-│   └── sample_papers.json            # Contoh data untuk verifikasi export
-└── README.md
+│   ├── search-sources.md
+│   ├── extracting-papers.md
+│   ├── table-builder.md
+│   └── output-rubric.md
+├── templates/paper_review_table_template.md
+├── scripts/extract_text.sh
+├── scripts/export_formats.py
+└── tests/sample_papers.json
 ```
 
-## Prasyarat Opsional
+## Rules
 
-- **poppler-utils** (`pdftotext`) — untuk ekstraksi PDF: `brew install poppler` (macOS)
-- **openpyxl** — untuk export Excel `.xlsx`: `pip3 install openpyxl`
-- Tidak wajib bila hanya memakai metadata API / file LaTeX / Markdown
+1. The primary output is a complete per-paper table, not a candidate list or recap.
+2. Never invent papers, DOI metadata, findings, methods, numbers, quotations, or recommendations.
+3. Every factual extraction sentence must have a provenance marker.
+4. Use `UNVERIFIED` for unresolved sources and `—` for unavailable data.
+5. Keep `papers.json` as the single source of truth for every export.
+6. Include the search date, sources, filters, and keyword combinations for reproducibility.
+7. Run output guardrails before delivery and report the final status.
 
-## Aturan Penting
+## License
 
-1. **Output utama = tabel penuh per-paper** — setiap paper satu baris, semua kolom review terisi.
-   Daftar kandidat/recap count hanyalah pelengkap, bukan pengganti tabel.
-2. Tidak mengarang paper — setiap baris wajib punya DOI terverifikasi atau file lokal yang dibaca.
-3. Tidak mengarang isi kolom — `—` untuk data tak tersedia, `(diringkas)` untuk inferensi.
-4. Ambil klaim dari paper, bukan opini agent (kolom Novelty/Gaps).
-5. Human-in-the-loop — agent mengusulkan, user memutuskan kolom, jumlah, dan definisi Gaps.
-6. Reproducible — sertakan tanggal search, kata kunci, dan kombinasi yang dipakai.
-
-## Attribution
-
-Subset dari **bimajanuri/academic-writing-skill**, yang mengadaptasi metodologi dari
-Master-cai/Research-Paper-Writing-Skills, SNL-UCSB/paper-writing-skill, dan WenyuChiou/ai-research-skills
-(literature triage matrix). Struktur tabel (synthesis matrix) dan daftar format ekspor
-(CSV/XLSX/BIB/XML/RIS) meniru fitur **Literature Review / Data Extraction** pada platform
-reference-manager AI.
-
-## Lisensi
-
-Rilis di bawah **[MIT License](LICENSE)**.
+Released under the [MIT License](LICENSE).
