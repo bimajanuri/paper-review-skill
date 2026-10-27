@@ -1,11 +1,6 @@
 ---
 name: paper-review
-description: |
-  Build a verifiable literature-review synthesis matrix from online searches, local PDF/LaTeX
-  files, or both. Produce per-paper Markdown tables and optional CSV, XLSX, BibTeX, XML, and RIS
-  exports. Use for literature reviews, paper tables, literature matrices, paper synthesis, and
-  bibliography exports.
-compatibility: Agent Skills-compatible AI assistants
+description: Builds a verifiable literature-review synthesis matrix from online searches, local PDF or LaTeX files, or both, producing per-paper Markdown tables and optional CSV, XLSX, BibTeX, EndNote XML, and RIS exports. Use when creating a literature review matrix, extracting structured paper tables (purpose, method, findings, limitations, gaps, theory, novelty, future work, DOI), synthesizing academic papers, or exporting verified bibliography records.
 ---
 
 # Paper Review
@@ -46,15 +41,15 @@ host supports natural-language skill activation.
 | **Folder** | The user provides a folder of papers | Local PDF or LaTeX files |
 | **Hybrid** | The user requests both | Merge search and local results, then deduplicate |
 
-## Pipeline
+## Pipeline & workflow checklist
 
-```text
-STEP 0: CLARIFY   → input mode, topic, target count, columns, filters, language, export format
-STEP 1: ACQUIRE   → collect, deduplicate, and verify papers
-STEP 2: EXTRACT   → read available sources and populate every agreed field
-STEP 3: BUILD     → create papers.json, render Markdown, and export requested formats
-STEP 4: VALIDATE  → run guardrails, evaluation, DOI checks, and quality gates
-```
+Copy this checklist and track progress internally before delivering:
+
+- [ ] **Step 0 — Clarify**: Confirm input mode (`Search`, `Folder`, or `Hybrid`), topic/keywords, target count, columns, filters (years, quartile), language, and export formats.
+- [ ] **Step 1 — Acquire & verify**: Collect, deduplicate, and verify papers (`references/search-sources.md` or `references/extracting-papers.md`).
+- [ ] **Step 2 — Extract with provenance**: Read available sources and populate every agreed field with `[AB]` or section markers (`[I-1]`, `[M-2]`, `[R-1]`, etc.).
+- [ ] **Step 3 — Build & export**: Create `papers.json` as the master source, render `literature_table.md`, and run `scripts/export_formats.py` for requested formats (`references/table-builder.md`).
+- [ ] **Step 4 — Validate**: Run `protocols/output-guardrails.md`, DOI checks, and quality gates (`protocols/evaluation.md` + `references/output-rubric.md`) before delivering.
 
 Ask for one initial confirmation when the scope is unclear. Do not ask for confirmation for each
 candidate after the user has approved the topic, count, columns, and filters.
@@ -194,6 +189,22 @@ status: PASS | PASS_WITH_FLAGS | FAIL
 Any fabricated source/content, unsupported finding, missing required provenance, or master/export
 mismatch is a hard failure. `PASS_WITH_FLAGS` is allowed only for explicitly reported unresolved
 source limitations.
+
+## Handling missing or ambiguous information
+
+- **Unclear scope, mode, columns, or filters**: Ask once before acquisition (Step 0). If the user asks to proceed with defaults, use 10–15 papers (Search), all eligible files (Folder), the 12 default columns, the last 5 years, English papers, and Markdown output.
+- **Unavailable field in a paper**: Mark the cell with `—`. Never guess or infer missing sample sizes, methods, theories, limitations, or findings.
+- **Abstract-only access (no full text)**: Extract only what is explicitly stated in the abstract/metadata and tag with `[AB]`. Mark full-text-only columns that are absent from the abstract as `—`.
+- **Unresolved DOI or unverified bibliographic metadata**: Preserve the available source text and mark the status `UNVERIFIED — check manually`. Never fabricate a DOI, volume, issue, page range, or quartile.
+- **Scanned or unreadable PDFs**: Report the unreadable file to the user and use `—` for unavailable fields rather than guessing from the title.
+
+## Common mistakes to avoid
+
+- **Replacing the table with a prose summary or candidate list**: The primary deliverable must always be a complete, one-row-per-paper synthesis table.
+- **Inventing papers, DOIs, quartiles, or statistics**: Never hallucinate citations or repair missing metadata from memory.
+- **Claiming full-text provenance from an abstract**: Never attach `[M-1]` or `[R-1]` markers when only the abstract (`[AB]`) was read.
+- **Omitting provenance markers**: Every factual extraction sentence in the table must end with a provenance tag (`[AB]`, `[I-2]`, `[M-3]`, `[R-1]`, `[D-2]`, `[L-1]`, `[C-1]`, `[F-1]`).
+- **Diverging export files**: Never edit Markdown, CSV, XLSX, BibTeX, XML, or RIS independently of `papers.json`; always generate exports from the validated `papers.json`.
 
 ## Non-negotiable rules
 

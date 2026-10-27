@@ -45,7 +45,8 @@ is required. Install the complete directory so every referenced module remains a
 | Gemini CLI | `.gemini/skills/paper-review/` or `.agents/skills/paper-review/` | `~/.gemini/skills/paper-review/` | Run `/skills`, then request a paper review |
 | GitHub Copilot CLI | `.github/skills/paper-review/` or `.agents/skills/paper-review/` | `~/.copilot/skills/paper-review/` | Run `/skills reload`, then `/skills info paper-review` |
 | Antigravity | `.agents/skills/paper-review/` | `~/.gemini/config/skills/paper-review/` | Start a matching literature-review task |
-| ChatGPT Skills | Upload the complete directory or ZIP | Product-managed | Import it where Skills are enabled and invoke it |
+| Gemini Apps (Web, Mac, Mobile) | `gemini.google.com` → **Customize** → **Skills** → **Create** → **Upload** | Product-managed (Personal Google Account 18+, Keep Activity on) | Upload folder or `.zip` with `SKILL.md` in root; invoke via `/` or `@` or automatic matching |
+| ChatGPT Skills | Upload the complete directory or ZIP via Skills UI | Product-managed | Import it where Skills are enabled and invoke via `/` or natural language |
 | Codex, Cursor, Windsurf, other compatible hosts | Host-specific path or `.agents/skills/paper-review/` | Host-specific | Reload skills and verify discovery |
 
 ChatGPT Skills availability and upload permissions depend on the account, workspace, and product
@@ -107,11 +108,64 @@ mkdir -p ~/.gemini/config/skills
 cp -R /path/to/paper-review ~/.gemini/config/skills/paper-review
 ```
 
-### ChatGPT Skills
+### Gemini Apps (Web, Mac, and Mobile) — Upload ZIP Method
 
-When Skills are enabled, upload `paper-review/` as a directory or ZIP. Preserve `SKILL.md`,
-`protocols/`, `references/`, `templates/`, `scripts/`, and `tests/`. If Skills are unavailable,
-use the platform's custom-instructions or project-files mechanism with the complete directory.
+Gemini Apps (`gemini.google.com`, the Gemini Mac app, and the mobile app) support installing custom skills by uploading a folder or `.zip` archive (requires a personal Google Account 18+ with **Keep Activity** turned on).
+
+Per Google's upload requirements ([Create & manage skills for Gemini Apps](https://support.google.com/gemini/answer/17094296)):
+- `SKILL.md` must be located in the **root (main) folder** of the uploaded folder or `.zip` archive.
+- The skill `name` inside `SKILL.md` must be lowercase with hyphens (`paper-review`).
+- All files in the package (`.md`, `.py`, `.sh`, `.json`) are supported plain-text formats and must total under 100 MB.
+- Exclude hidden binary/OS metadata files (such as `.DS_Store`, `.git/`, `.pyc`, or `__MACOSX`) so the upload validation does not fail.
+
+**Step 1: Create a clean `.zip` archive (with `SKILL.md` at the root)**
+
+```bash
+cd /path/to/paper-review
+zip -r -X paper-review-gemini.zip \
+  SKILL.md protocols references templates scripts tests \
+  -x "*.DS_Store" -x "__MACOSX/*" -x "*.git*" -x "*.pyc"
+```
+
+*(Alternatively, you can upload the `paper-review` folder directly as long as it contains no hidden `.DS_Store` or `.git` files.)*
+
+**Step 2: Upload to Gemini Web (`gemini.google.com`)**
+
+1. Go to [gemini.google.com](https://gemini.google.com) (or open the Gemini app on Mac).
+2. On the left sidebar, click **Customize** (if you don't see it, first click **More**) → **Skills**.
+3. At the top of the Skills page, click **Create** → **Upload**.
+4. Select `paper-review-gemini.zip` (or the `paper-review/` folder) and click **Open**.
+5. Review the imported skill details and click **Create** at the top.
+6. **Usage**: In any chat or task thread, type `/` (or `@`) and select `paper-review`, or describe your literature review request in natural language — Gemini automatically applies activated skills when relevant.
+
+### ChatGPT Skills — Upload ZIP Method
+
+ChatGPT Skills can be installed by uploading a `.zip` package on accounts and workspaces with the Skills feature enabled (or attached directly in chat sessions if the Skills UI is unavailable).
+
+**Step 1: Create a clean `.zip` package**
+
+You can package either the root files (`paper-review-gemini.zip` above) or the complete `paper-review/` directory without hidden OS/Git files:
+
+```bash
+zip -r -X paper-review.zip paper-review \
+  -x "*/.git/*" -x "*/.DS_Store" -x "__MACOSX/*" -x "*.pyc"
+```
+
+**Step 2: Upload to ChatGPT**
+
+1. In ChatGPT, open **Skills** from the sidebar or profile menu.
+2. Click **Create** → **Upload from your computer**, and select `paper-review.zip`.
+3. Enable the skill for your conversation or workspace.
+4. **Usage**: Invoke the skill with `/` or natural-language prompts such as:
+
+```text
+Use the paper-review skill in Search mode. Review 15 papers on [topic] from the last five years,
+preserve provenance markers for every factual sentence, verify DOI metadata, and build the synthesis table.
+```
+
+If the Skills UI is not available on your plan, upload/attach the `.zip` archive (or the relevant Markdown files) directly in the chat message composer and instruct ChatGPT to read and follow `SKILL.md`.
+
+> **Note:** ChatGPT may scan an uploaded skill and mark it as **Needs Review** or **Blocked**. This is a workspace/product safety check rather than an issue with the Agent Skills format; review workspace permissions before retrying.
 
 ### Other compatible hosts
 
