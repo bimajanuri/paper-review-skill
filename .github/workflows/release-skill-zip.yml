@@ -1,0 +1,46 @@
+name: Build and Release Skill ZIP
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'SKILL.md'
+      - 'protocols/**'
+      - 'references/**'
+      - 'templates/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/release-skill-zip.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release-zip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build clean root-level skill ZIP archives
+        run: |
+          zip -r -X paper-review-gemini.zip \
+            SKILL.md protocols references templates scripts tests \
+            -x "*.DS_Store" -x "__MACOSX/*" -x "*.git*" -x "*.pyc"
+          cp paper-review-gemini.zip paper-review.zip
+
+      - name: Create or update GitHub Release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v1.0.0"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" paper-review-gemini.zip paper-review.zip --clobber
+          else
+            gh release create "$TAG" paper-review-gemini.zip paper-review.zip \
+              --title "Paper Review Skill (Ready-to-Upload ZIP)" \
+              --notes "### Ready-to-Upload Skill Packages (Gemini Apps & ChatGPT)\n\nDownload **`paper-review-gemini.zip`** or **`paper-review.zip`** below to upload directly to **Gemini Apps** (\`gemini.google.com\` → Customize → Skills → Create → Upload) or **ChatGPT Skills**.\n\n> **Important:** Do **not** download \`Source code (zip)\` or use GitHub's **Code → Download ZIP** button for skill uploads, because GitHub wraps repository files inside a \`paper-review-skill-main/\` subfolder instead of placing \`SKILL.md\` at the archive root." \
+              --latest
+          fi

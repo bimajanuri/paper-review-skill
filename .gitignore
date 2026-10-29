@@ -1,4 +1,7 @@
 .DS_Store
 *.swp
 *~
+*.zip
+__pycache__/
+*.pyc
 tests/out/
